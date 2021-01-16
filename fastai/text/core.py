@@ -221,7 +221,7 @@ def tokenize_df(df, text_cols, n_workers=defaults.cpus, rules=None, mark_fields=
 
     other_cols = df.columns[~df.columns.isin(text_cols)]
     res = df[other_cols].copy()
-    res[tok_text_col] = pd.Series(outputs, dtype=object)
+    res[tok_text_col] = outputs
     res[f'{tok_text_col}_length'] = [len(o) for o in outputs]
     return res,Counter(outputs.concat())
 
@@ -248,7 +248,7 @@ def load_tokenized_csv(fname):
     fname = Path(fname)
     out = pd.read_csv(fname)
     for txt_col in out.columns[1:-1]:
-        out[txt_col] = out[txt_col].str.split(' ')
+        out[txt_col] = tuple(out[txt_col].str.split(' '))
     return out,load_pickle(fname.with_suffix('.pkl'))
 
 # Cell
